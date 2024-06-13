@@ -34,6 +34,10 @@ def get_options():
                         type=int, choices=[0, 1],
                         help='mask scores representing annotated acceptor/donor gain and '
                              'unannotated acceptor/donor loss, defaults to 0')
+    parser.add_argument('-E', metavar='ensemble_id', nargs='?', default=0,
+                        type=int, choices=[0, 1, 2, 3, 4],
+                        help='model to run within ensemble')
+    
     args = parser.parse_args()
 
     return args
@@ -69,7 +73,7 @@ def main():
     ann = Annotator(args.R, args.A)
 
     for record in vcf:
-        scores = get_delta_scores(record, ann, args.D, args.M)
+        scores = get_delta_scores(record, ann, args.D, args.M, args.E)
         if len(scores) > 0:
             record.info['SpliceAI'] = scores
         output.write(record)
